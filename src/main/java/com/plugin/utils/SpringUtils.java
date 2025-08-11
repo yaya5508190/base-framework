@@ -1,6 +1,8 @@
 package com.plugin.utils;
 
+import com.plugin.common.Constants;
 import com.plugin.exception.PluginRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.stereotype.Controller;
@@ -9,11 +11,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 
 import static com.plugin.utils.CommonUtils.normalizePrefix;
 
+@Slf4j
 public class SpringUtils {
 
     /**
@@ -36,37 +40,28 @@ public class SpringUtils {
     /**
      * 注册Controller到Spring的RequestMappingHandlerMapping
      *
-     * @param controller                   控制器实例
-     * @param mapping RequestMappingHandlerMapping实例
-     * @param pathPrefix                   路径前缀
+     * @param controller controller实例
+     * @param mapping    RequestMappingHandlerMapping实例
+     * @param pathPrefix 路径前缀
      * @throws Exception 异常
      */
-    public static void registerController(
+    public static void handleControllerRegistration(
             Object controller,
             RequestMappingHandlerMapping mapping,
-            String pathPrefix) throws Exception {
+            String pathPrefix,
+            String action) throws Exception {
+
+        if (controller == null || mapping == null) {
+            throw new PluginRuntimeException("Controller, RequestMappingHandlerMapping 不可为空");
+        }
 
         Class<?> handlerClazz = controller.getClass();
-        //获取spring原始类
+
+        //获取spring原始类避免代理类干扰获取RequestMappingInfo
         Class<?> userType = ClassUtils.getUserClass(handlerClazz);
 
-        // TODO: 通过反射获取RequestMappingHandlerMapping的getMappingForMethod方法,有安全性风险未来可以优化
-        Method getMappingMethod = RequestMappingHandlerMapping.class
-                .getDeclaredMethod("getMappingForMethod", Method.class, Class.class);
-        getMappingMethod.setAccessible(true);
-
-
-        // 扫描原始Controller方法的映射信息
-        Map<Method, RequestMappingInfo> detected = MethodIntrospector.selectMethods(
-                userType,
-                (MethodIntrospector.MetadataLookup<RequestMappingInfo>) method -> {
-                    try {
-                        return (RequestMappingInfo) getMappingMethod.invoke(mapping, method, userType);
-                    } catch (Exception e) {
-                        throw new PluginRuntimeException("处理方法" + userType.getName() + ":"+ method.getName() + "时出现异常:", e);
-                    }
-                }
-        );
+        //获取方法和RequestMappingInfo映射关系
+        Map<Method, RequestMappingInfo> detected = getMappingForMethod(mapping, userType);
 
         //构造前缀映射信息
         RequestMappingInfo prefixInfo = null;
@@ -90,9 +85,36 @@ public class SpringUtils {
 
             // Spring 内部会做并发与冲突检查，这里直接注册 模仿detectHandlerMethods支持AOP
             Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
-            mapping.registerMapping(info, controller, invocableMethod);
+            if(Constants.REGISTERER.equals(action)) {
+                log.info("{}注册到RequestMappingHandlerMapping", info.getPathPatternsCondition());
+                mapping.registerMapping(info, controller, invocableMethod);
+            }else if(Constants.UN_REGISTERER.equals(action)) {
+                log.info("{}从RequestMappingHandlerMapping卸载", info.getPathPatternsCondition());
+                mapping.unregisterMapping(info);
+            }
         }
     }
 
+    private static Map<Method, RequestMappingInfo> getMappingForMethod(
+            RequestMappingHandlerMapping mapping,
+            Class<?> userType) throws Exception {
 
+        // TODO: 通过反射获取RequestMappingHandlerMapping的getMappingForMethod方法,有安全性风险未来可以优化
+        Method getMappingMethod = RequestMappingHandlerMapping.class
+                .getDeclaredMethod("getMappingForMethod", Method.class, Class.class);
+        getMappingMethod.setAccessible(true);
+
+
+        // 扫描原始Controller方法的映射信息
+        return MethodIntrospector.selectMethods(
+                userType,
+                (MethodIntrospector.MetadataLookup<RequestMappingInfo>) method -> {
+                    try {
+                        return (RequestMappingInfo) getMappingMethod.invoke(mapping, method, userType);
+                    } catch (Exception e) {
+                        throw new PluginRuntimeException("处理方法" + userType.getName() + ":" + method.getName() + "时出现异常:", e);
+                    }
+                }
+        );
+    }
 }
