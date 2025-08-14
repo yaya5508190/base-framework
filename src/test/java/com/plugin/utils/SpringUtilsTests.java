@@ -1,4 +1,4 @@
-package com.plugin.loader;
+package com.plugin.utils;
 
 import com.plugin.common.Constants;
 import com.plugin.controller.TestController;
