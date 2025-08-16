@@ -4,11 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DemoController {
+public class PluginDemoController {
 
-    @GetMapping("/api/hello")
+    @GetMapping("/api/plugin")
     public String sayHello(){
-        return "hello";
+        return "plugin";
     }
 
 }
