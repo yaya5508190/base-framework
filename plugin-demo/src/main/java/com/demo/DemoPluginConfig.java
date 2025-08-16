@@ -22,7 +22,7 @@ public class DemoPluginConfig implements PluginConfig {
 
     @Override
     public String pathPrefix() {
-        return "";
+        return "plugin";
     }
 
 }
