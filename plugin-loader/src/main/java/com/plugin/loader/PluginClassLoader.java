@@ -16,13 +16,8 @@ import static com.google.common.collect.Iterables.any;
  */
 @Slf4j
 public class PluginClassLoader extends URLClassLoader {
-    private static final Set<String> excludedPackages;
-    private static final Set<String> overridePackages;
-
-    static {
-        excludedPackages = Sets.newHashSet("java.", "javax.", "jdk.", "javafx.", "sun.", "com.sun.", "oracle.");
-        overridePackages = Sets.newHashSet();
-    }
+    private final Set<String> excludedPackages =  Sets.newHashSet("java.", "javax.", "jdk.", "javafx.", "sun.", "com.sun.", "oracle.");
+    private final Set<String> overridePackages = Sets.newHashSet();
 
     public PluginClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);

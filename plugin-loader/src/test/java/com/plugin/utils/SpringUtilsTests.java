@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 
-@SpringBootTest(classes = com.yx.plugin.loader.PluginLoaderApplication.class)
+@SpringBootTest(classes = com.plugin.PluginLoaderApplication.class)
 @AutoConfigureMockMvc
 public class SpringUtilsTests {
 

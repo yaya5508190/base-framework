@@ -95,5 +95,6 @@ public class PluginClassLoaderTest {
         Class<?> clazz = classLoader.loadClass("com.override.Sample");
         assertSame(ClassLoader.getSystemClassLoader(), clazz.getClassLoader());
         assertNotSame(classLoader, clazz.getClassLoader());
+        classLoader.close();
     }
 }

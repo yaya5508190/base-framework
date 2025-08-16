@@ -1,6 +1,3 @@
 spring:
   application:
     name: plugin-loader
-plugin:
-  path: C:\develop\x-project\spring-plugin-loader\plugin-demo\target
-  scan: true
