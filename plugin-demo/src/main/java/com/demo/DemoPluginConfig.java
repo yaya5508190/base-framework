@@ -21,8 +21,7 @@ public class DemoPluginConfig implements PluginConfig {
     }
 
     @Override
-    public String pathPrefix() {
-        return "plugin";
+    public String pluginId() {
+        return "943a6b1b-222a-4e99-b900-3744270480e6";
     }
-
 }

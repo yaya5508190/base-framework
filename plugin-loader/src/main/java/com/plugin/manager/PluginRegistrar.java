@@ -9,19 +9,22 @@ import com.plugin.loader.PluginClassLoader;
 import com.plugin.utils.CommonUtils;
 import com.plugin.utils.SpringUtils;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -59,9 +62,9 @@ public class PluginRegistrar {
         }
 
         PluginConfig pluginConfig = pluginConfigList.get(0);
-        checkNotNull(pluginConfig.name(), "pluginName为空");
-        checkNotNull(pluginConfig.version(), "pluginVersion为空");
-        checkNotNull(pluginConfig.pathPrefix(), "pluginVersion为空");
+        checkNotNull(pluginConfig.name(), "pluginName不可为空");
+        checkNotNull(pluginConfig.version(), "pluginVersion不可为空");
+        checkNotNull(pluginConfig.pluginId(), "pluginId不可为空");
 
         //用于还原classloader
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
@@ -70,6 +73,7 @@ public class PluginRegistrar {
         Thread.currentThread().setContextClassLoader(pluginClassLoader);
         PluginApplicationContext pluginApplicationContext;
         List<Object> mvcControllers;
+        List<RequestMappingInfo> resourceMappings;
         try {
             //获取并加载jar包中所有类
             Set<Class<?>> classes = CommonUtils.getClasses(pluginClassLoader, jarPath.toString());
@@ -79,6 +83,9 @@ public class PluginRegistrar {
 
             //注册MVC Controller
             mvcControllers = registerMvcControllers(classes, pluginApplicationContext, pluginConfig);
+
+            //注册静态资源处理器
+            resourceMappings = registerStaticResources(pluginClassLoader,pluginApplicationContext);
         } catch (Exception e) {
             log.error("插件注册异常, pluginPath={}", jarPath, e);
             CachedIntrospectionResults.clearClassLoader(pluginClassLoader);
@@ -93,6 +100,7 @@ public class PluginRegistrar {
                 pluginConfig,
                 pluginApplicationContext,
                 requestMappingHandlerMapping,
+                resourceMappings,
                 mvcControllers
         );
         return pluginManager.register(plugin);
@@ -110,7 +118,7 @@ public class PluginRegistrar {
                 SpringUtils.handleControllerRegistration(
                         controllerBean,
                         requestMappingHandlerMapping,
-                        pluginConfig.pathPrefix(),
+                        pluginConfig.pluginId(),
                         Constants.REGISTERER);
             }
         }
@@ -126,6 +134,40 @@ public class PluginRegistrar {
         pluginApplicationContext.scan(Sets.newHashSet(pluginConfig.getClass().getPackage().getName()).toArray(new String[0]));
         pluginApplicationContext.refresh();
         return pluginApplicationContext;
+    }
+
+    private List<RequestMappingInfo>  registerStaticResources(PluginClassLoader pluginClassLoader,ApplicationContext puginApplicationContext) {
+        List<RequestMappingInfo> resourceMapping = new ArrayList<>();
+        ClassPathResource staticResource = new ClassPathResource("static/", pluginClassLoader);
+        if (!staticResource.exists()) {
+            return resourceMapping;
+        }
+        //注册静态资源处理器
+        ResourceHttpRequestHandler handler = new ResourceHttpRequestHandler();
+        handler.setLocations(java.util.Collections.singletonList(staticResource));
+        handler.setApplicationContext(puginApplicationContext);
+        try {
+            handler.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new PluginRuntimeException("初始化ResourceHttpRequestHandler失败", e);
+        }
+
+        RequestMappingInfo mappingInfo = RequestMappingInfo.paths("/**")
+                .options(requestMappingHandlerMapping.getBuilderConfiguration())
+                .build();
+        try {
+            Method method = ResourceHttpRequestHandler.class
+                    .getMethod(
+                            "handleRequest",
+                            HttpServletRequest.class,
+                            HttpServletResponse.class
+                    );
+            requestMappingHandlerMapping.registerMapping(mappingInfo, handler, method);
+        } catch (NoSuchMethodException e) {
+            throw new PluginRuntimeException("注册静态资源处理器失败", e);
+        }
+        resourceMapping.add(mappingInfo);
+        return resourceMapping;
     }
 }
 

@@ -17,7 +17,7 @@ public class CommonUtils {
      * @param prefix 路径前缀
      * @return 规范化后的路径前缀
      */
-    protected static String normalizePrefix(String prefix) {
+    public static String normalizePrefix(String prefix) {
         String p = prefix.trim();
         if (!p.startsWith("/")) {
             p = "/" + p;

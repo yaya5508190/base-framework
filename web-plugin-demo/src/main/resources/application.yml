@@ -4,3 +4,6 @@ spring:
 plugin:
   path: C:\develop\x-project\spring-plugin-loader\plugin-demo\target
   scan: true
+logging:
+  level:
+    root: debug

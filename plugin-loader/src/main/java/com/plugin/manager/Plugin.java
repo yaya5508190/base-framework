@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.beans.Introspector;
@@ -29,6 +30,8 @@ public class Plugin {
     private PluginApplicationContext pluginApplicationContext;
     //全局RequestMappingHandlerMapping
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    //插件的资源处理器
+    private List<RequestMappingInfo> resourceHandlersMappings;
     //插件的Controller
     private List<Object> mvcControllers;
 
@@ -37,11 +40,13 @@ public class Plugin {
             PluginConfig pluginConfig,
             PluginApplicationContext pluginApplicationContext,
             RequestMappingHandlerMapping requestMappingHandlerMapping,
+            List<RequestMappingInfo> resourceHandlersMappings,
             List<Object> mvcControllers) {
         this.pluginPath = pluginPath;
         this.pluginConfig = pluginConfig;
         this.pluginApplicationContext = pluginApplicationContext;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+        this.resourceHandlersMappings = resourceHandlersMappings;
         this.mvcControllers = mvcControllers;
     }
 
@@ -56,6 +61,8 @@ public class Plugin {
         }
         // 取消注册Controller
         unRegisterController(requestMappingHandlerMapping);
+        // 取消注册资源处理器
+        unRegisterResourceHandlers(requestMappingHandlerMapping);
         // 关闭 spring context
         closeApplicationContext(pluginApplicationContext);
         // 关闭 class loader
@@ -86,7 +93,16 @@ public class Plugin {
     private void unRegisterController(RequestMappingHandlerMapping mapping) {
         checkNotNull(mapping, "RequestMappingHandlerMapping 为空");
         for (Object controllerBean : mvcControllers) {
-            SpringUtils.handleControllerRegistration(controllerBean, mapping, pluginConfig.pathPrefix(), Constants.UN_REGISTERER);
+            SpringUtils.handleControllerRegistration(controllerBean, mapping, pluginConfig.pluginId(), Constants.UN_REGISTERER);
+        }
+    }
+
+    private void unRegisterResourceHandlers(RequestMappingHandlerMapping mapping) {
+        if (resourceHandlersMappings == null || resourceHandlersMappings.isEmpty()) {
+            return;
+        }
+        for (RequestMappingInfo requestMappingInfo : resourceHandlersMappings) {
+            mapping.unregisterMapping(requestMappingInfo);
         }
     }
 }

@@ -6,8 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PluginViewController {
 
-    @GetMapping("/")
+    @GetMapping("/a")
     public String index() {
-        return "forward:/index.html";
+        return "forward:/plugin/a.html";
+    }
+
+    @GetMapping("/b")
+    public String a() {
+        return "forward:/plugin/b.html";
+    }
+
+    @GetMapping("/c")
+    public String b() {
+        return "forward:/plugin/c.html";
     }
 }
