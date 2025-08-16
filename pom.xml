@@ -25,5 +25,6 @@
 		<module>plugin-loader</module>
 		<module>plugin-loader-api</module>
 		<module>plugin-demo</module>
+		<module>web-plugin-demo</module>
 	</modules>
 </project>
