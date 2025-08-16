@@ -16,21 +16,29 @@ import static com.google.common.collect.Iterables.any;
  */
 @Slf4j
 public class PluginClassLoader extends URLClassLoader {
-    private final Set<String> excludedPackages;
-    private final Set<String> overridePackages;
+    private static final Set<String> excludedPackages;
+    private static final Set<String> overridePackages;
+
+    static {
+        excludedPackages = Sets.newHashSet("java.", "javax.", "jdk.", "javafx.", "sun.", "com.sun.", "oracle.");
+        overridePackages = Sets.newHashSet();
+    }
 
     public PluginClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
-        this.excludedPackages = Sets.newHashSet("java.", "javax.", "jdk.", "javafx.", "sun.", "com.sun.", "oracle.");
-        this.overridePackages = Sets.newHashSet();
     }
 
-    public void addExcludedPackages(Set<String> excludedPackages) {
-        this.excludedPackages.addAll(excludedPackages);
+    public PluginClassLoader(URL url, ClassLoader parent) {
+        super(new URL[]{url}, parent);
     }
 
-    public void addOverridePackages(Set<String> overridePackages) {
-        this.overridePackages.addAll(overridePackages);
+
+    public void addExcludedPackages(Set<String> excluded) {
+        excludedPackages.addAll(excluded);
+    }
+
+    public void addOverridePackages(Set<String> override) {
+        overridePackages.addAll(override);
     }
 
     private boolean isEligibleForOverriding(@NonNull String className) {
@@ -38,7 +46,7 @@ public class PluginClassLoader extends URLClassLoader {
     }
 
     protected boolean isExcluded(@NonNull String className) {
-        for (String packageName : this.excludedPackages) {
+        for (String packageName : excludedPackages) {
             if (className.startsWith(packageName)) {
                 return true;
             }
@@ -64,8 +72,9 @@ public class PluginClassLoader extends URLClassLoader {
                 if (log.isDebugEnabled()) {
                     log.debug("当前ClassLoader无法找到类, 尝试回退到父加载器加载: {}", className, e);
                 }
-                /**
-                 * 只回退给父，不使用 super.loadClass
+
+                /*
+                 * 只回退给父loader，不使用 super.loadClass
                  * super.loadClass 的默认流程是：父优先 → 若父找不到，再调用 当前 loader 的 findClass。
                  * 刚刚已经试过 findClass（抛了 ClassNotFoundException），再走一遍会重复尝试甚至再次抛异常。
                  */
