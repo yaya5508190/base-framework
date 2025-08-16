@@ -50,6 +50,11 @@
 			<artifactId>guava</artifactId>
 			<version>33.4.8-jre</version>
 		</dependency>
+		<dependency>
+			<groupId>plugin-project</groupId>
+			<artifactId>plugin-loader-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
