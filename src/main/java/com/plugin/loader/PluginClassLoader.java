@@ -64,7 +64,11 @@ public class PluginClassLoader extends URLClassLoader {
                 if (log.isDebugEnabled()) {
                     log.debug("当前ClassLoader无法找到类, 尝试回退到父加载器加载: {}", className, e);
                 }
-                // 只回退给父，不再 super.loadClass（避免再次 findClass）
+                /**
+                 * 只回退给父，不使用 super.loadClass
+                 * super.loadClass 的默认流程是：父优先 → 若父找不到，再调用 当前 loader 的 findClass。
+                 * 刚刚已经试过 findClass（抛了 ClassNotFoundException），再走一遍会重复尝试甚至再次抛异常。
+                 */
                 ClassLoader parentClassLoader = getParent();
                 if (parentClassLoader != null) {
                     return parentClassLoader.loadClass(className);
