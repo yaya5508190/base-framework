@@ -1,7 +1,5 @@
 package com.plugin.loader;
 
-
-import com.override.Sample;
 import org.junit.jupiter.api.Test;
 
 import javax.tools.JavaCompiler;
@@ -19,6 +17,7 @@ public class PluginClassLoaderTest {
     /**
      * java标准的类是由系统类加载器加载的，所以classLoader为null
      * 这里测试的是PluginClassLoader是否会覆盖java.lang.String类的加载
+     *
      * @throws Exception
      */
     @Test
@@ -29,6 +28,11 @@ public class PluginClassLoaderTest {
         assertNull(clazz.getClassLoader());
     }
 
+    /**
+     * 测试PluginClassLoader排除加载指定包
+     *
+     * @throws Exception
+     */
     @Test
     public void shouldRespectAddedExcludedPackages() throws Exception {
         PluginClassLoader classLoader = new PluginClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
@@ -38,6 +42,11 @@ public class PluginClassLoaderTest {
         assertTrue(excluded);
     }
 
+    /**
+     * 测试pluginClassLoader覆盖加载类
+     *
+     * @throws Exception
+     */
     @Test
     public void shouldLoadPluginClassWhenOverriding() throws Exception {
         // 创建一个插件目录和源文件
@@ -72,5 +81,19 @@ public class PluginClassLoaderTest {
         result = (String) method.invoke(instance);
         assertEquals("plugin", result);
         classLoader.close();
+    }
+
+    /**
+     * 测试指定覆盖的时候由于子加载器无法加载，回退到父类加载器加载
+     *
+     * @throws Exception
+     */
+    @Test
+    public void shouldLoadOverridePackageFromParent() throws Exception {
+        PluginClassLoader classLoader = new PluginClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
+        classLoader.addOverridePackages(Set.of("com.override."));
+        Class<?> clazz = classLoader.loadClass("com.override.Sample");
+        assertSame(ClassLoader.getSystemClassLoader(), clazz.getClassLoader());
+        assertNotSame(classLoader, clazz.getClassLoader());
     }
 }
