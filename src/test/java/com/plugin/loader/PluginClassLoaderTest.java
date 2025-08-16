@@ -40,6 +40,7 @@ public class PluginClassLoaderTest {
 
     @Test
     public void shouldLoadPluginClassWhenOverriding() throws Exception {
+        // 创建一个插件目录和源文件
         Path pluginDir = Paths.get("src/test/java/com/plugin/loader/override");
         Path sourceDir = pluginDir.resolve(Paths.get("com", "override"));
         Files.createDirectories(sourceDir);
@@ -47,20 +48,23 @@ public class PluginClassLoaderTest {
         String source = "package com.override; public class Sample { public String value() { return \"plugin\"; } }";
         Files.writeString(sourceFile, source);
 
+        // 编译源文件
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, null, null, "-d", pluginDir.toString(), sourceFile.toString());
         Files.deleteIfExists(sourceFile);
 
+        // 创建一个插件类加载器
         URL[] urls = {pluginDir.toUri().toURL()};
         PluginClassLoader classLoader = new PluginClassLoader(urls, ClassLoader.getSystemClassLoader());
 
+        //不添加覆盖包的时候 应该使用父类加载器加载
         Class<?> clazz = classLoader.loadClass("com.override.Sample");
         Object instance = clazz.getDeclaredConstructor().newInstance();
         Method method = clazz.getDeclaredMethod("value");
         String result = (String) method.invoke(instance);
         assertEquals("parent", result);
 
-        // 添加覆盖包
+        // 添加覆盖包后，应该使用PluginClassLoader加载
         classLoader.addOverridePackages(Set.of("com.override."));
         clazz = classLoader.loadClass("com.override.Sample");
         instance = clazz.getDeclaredConstructor().newInstance();
