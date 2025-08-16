@@ -1,3 +1,18 @@
 <html lang="zh-CN">
     <h1>plugin A</h1>
+    <button id="loadData">调用 AJAX</button>
+    <pre id="result"></pre>
+    <script>
+        document.getElementById("loadData").addEventListener("click", function() {
+            // 这里用 JSONPlaceholder 这个公开 API 做示例
+            fetch("api/plugin")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("result").textContent = data;
+                })
+                .catch(err => {
+                    document.getElementById("result").textContent = "请求出错: " + err;
+                });
+        });
+    </script>
 </html>
