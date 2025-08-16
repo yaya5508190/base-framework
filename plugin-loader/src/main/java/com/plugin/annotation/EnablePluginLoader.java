@@ -7,6 +7,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(PluginLoadBeanSelector.class)
-public @interface EnablePluginLoadServer {
+@Import(PluginLoaderSelector.class)
+public @interface EnablePluginLoader {
 }

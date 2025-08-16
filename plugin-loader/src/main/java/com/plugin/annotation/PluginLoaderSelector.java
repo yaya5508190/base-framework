@@ -17,11 +17,11 @@ import java.util.Map;
  */
 @Slf4j
 @NonNullApi
-public class PluginLoadBeanSelector implements ImportSelector {
+public class PluginLoaderSelector implements ImportSelector {
 
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-        Map<String, Object> attrs = importingClassMetadata.getAnnotationAttributes(EnablePluginLoadServer.class.getName());
+        Map<String, Object> attrs = importingClassMetadata.getAnnotationAttributes(EnablePluginLoader.class.getName());
         this.initEnableConfig(attrs);
 
         List<String> selectors = Lists.newArrayList();
