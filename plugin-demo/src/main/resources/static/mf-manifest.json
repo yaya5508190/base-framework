@@ -1,0 +1,89 @@
+{
+  "id": "plugin_project",
+  "name": "plugin_project",
+  "metaData": {
+    "name": "plugin_project",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "1.0.0",
+      "buildName": "plugin_project"
+    },
+    "remoteEntry": {
+      "name": "static/js/plugin_project.18c3e0ee.js",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": "@mf-types.zip",
+      "api": "@mf-types.d.ts"
+    },
+    "globalName": "plugin_project",
+    "pluginVersion": "0.18.2",
+    "prefetchInterface": false,
+    "publicPath": "943a6b1b-222a-4e99-b900-3744270480e6/"
+  },
+  "shared": [
+    {
+      "id": "plugin_project:react-dom",
+      "name": "react-dom",
+      "version": "18.3.1",
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "static/js/async/987.a54ee8fe.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "plugin_project:react",
+      "name": "react",
+      "version": "18.3.1",
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "static/js/async/512.580a198e.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    }
+  ],
+  "remotes": [],
+  "exposes": [
+    {
+      "id": "plugin_project:.",
+      "name": ".",
+      "assets": {
+        "js": {
+          "sync": [
+            "static/js/async/__federation_expose_default_export.dabbd4c6.js"
+          ],
+          "async": []
+        },
+        "css": {
+          "sync": [
+            "static/css/async/__federation_expose_default_export.4f1887cc.css"
+          ],
+          "async": []
+        }
+      },
+      "path": "."
+    }
+  ]
+}

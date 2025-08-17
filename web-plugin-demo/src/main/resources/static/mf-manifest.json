@@ -1,0 +1,76 @@
+{
+  "id": "main_project",
+  "name": "main_project",
+  "metaData": {
+    "name": "main_project",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "1.0.0",
+      "buildName": "main_project"
+    },
+    "remoteEntry": {
+      "name": "",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": ".",
+      "api": "."
+    },
+    "globalName": "main_project",
+    "pluginVersion": "0.18.2",
+    "prefetchInterface": false,
+    "publicPath": "./"
+  },
+  "shared": [
+    {
+      "id": "main_project:react-dom",
+      "name": "react-dom",
+      "version": "18.3.1",
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "static/js/async/987.b46b477c.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "main_project:react",
+      "name": "react",
+      "version": "18.3.1",
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "static/js/async/512.7bb66437.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    }
+  ],
+  "remotes": [
+    {
+      "federationContainerName": "rslib_provider",
+      "moduleName": ".",
+      "alias": "provider",
+      "entry": "./943a6b1b-222a-4e99-b900-3744270480e6/mf-manifest.json"
+    }
+  ],
+  "exposes": []
+}
