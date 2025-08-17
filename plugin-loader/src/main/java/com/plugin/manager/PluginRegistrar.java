@@ -18,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.lang.reflect.Method;
@@ -85,7 +86,7 @@ public class PluginRegistrar {
             mvcControllers = registerMvcControllers(classes, pluginApplicationContext, pluginConfig);
 
             //注册静态资源处理器
-            resourceMappings = registerStaticResources(pluginClassLoader,pluginApplicationContext);
+            resourceMappings = registerStaticResources(pluginClassLoader,pluginApplicationContext,pluginConfig);
         } catch (Exception e) {
             log.error("插件注册异常, pluginPath={}", jarPath, e);
             CachedIntrospectionResults.clearClassLoader(pluginClassLoader);
@@ -136,7 +137,10 @@ public class PluginRegistrar {
         return pluginApplicationContext;
     }
 
-    private List<RequestMappingInfo>  registerStaticResources(PluginClassLoader pluginClassLoader,ApplicationContext puginApplicationContext) {
+    private List<RequestMappingInfo>  registerStaticResources(
+            PluginClassLoader pluginClassLoader,
+            ApplicationContext pluginApplicationContext,
+            PluginConfig pluginConfig) {
         List<RequestMappingInfo> resourceMapping = new ArrayList<>();
         ClassPathResource staticResource = new ClassPathResource("static/", pluginClassLoader);
         if (!staticResource.exists()) {
@@ -144,15 +148,21 @@ public class PluginRegistrar {
         }
         //注册静态资源处理器
         ResourceHttpRequestHandler handler = new ResourceHttpRequestHandler();
+        PluginRewritingResourcesResolver pluginRewritingResourcesResolver = new PluginRewritingResourcesResolver(pluginConfig.pluginId());
         handler.setLocations(java.util.Collections.singletonList(staticResource));
-        handler.setApplicationContext(puginApplicationContext);
+        handler.setApplicationContext(pluginApplicationContext);
+        // 插入自定义资源解析器到处理器将资源url重写，去掉pluginId前缀，以符合实际资源路径
+        handler.getResourceResolvers().add(pluginRewritingResourcesResolver);
+        handler.getResourceResolvers().add(new PathResourceResolver());
+
         try {
             handler.afterPropertiesSet();
         } catch (Exception e) {
             throw new PluginRuntimeException("初始化ResourceHttpRequestHandler失败", e);
         }
 
-        RequestMappingInfo mappingInfo = RequestMappingInfo.paths("/**")
+        RequestMappingInfo mappingInfo = RequestMappingInfo
+                .paths("/" + pluginConfig.pluginId() + "/**")
                 .options(requestMappingHandlerMapping.getBuilderConfiguration())
                 .build();
         try {

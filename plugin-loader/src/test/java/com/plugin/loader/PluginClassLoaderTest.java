@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,6 +96,32 @@ public class PluginClassLoaderTest {
         Class<?> clazz = classLoader.loadClass("com.override.Sample");
         assertSame(ClassLoader.getSystemClassLoader(), clazz.getClassLoader());
         assertNotSame(classLoader, clazz.getClassLoader());
+        classLoader.close();
+    }
+
+    /**
+     * 测试资源加载子优先
+     */
+    @Test
+    public void shouldLoadResourceChildFirst() throws Exception {
+        Path pluginDir = Files.createTempDirectory("plugin");
+        Files.writeString(pluginDir.resolve("resource.txt"), "plugin");
+
+        PluginClassLoader classLoader = new PluginClassLoader(new URL[]{pluginDir.toUri().toURL()}, ClassLoader.getSystemClassLoader());
+
+        URL resource = classLoader.getResource("resource.txt");
+        assertNotNull(resource);
+        String content = Files.readString(Paths.get(resource.toURI()));
+        assertEquals("plugin", content);
+
+        Enumeration<URL> resources = classLoader.getResources("resource.txt");
+        assertTrue(resources.hasMoreElements());
+        String first = Files.readString(Paths.get(resources.nextElement().toURI()));
+        assertEquals("plugin", first);
+        assertTrue(resources.hasMoreElements());
+        String second = Files.readString(Paths.get(resources.nextElement().toURI()));
+        assertEquals("parent", second);
+
         classLoader.close();
     }
 }

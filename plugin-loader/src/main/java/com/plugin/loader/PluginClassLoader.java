@@ -4,10 +4,10 @@ import com.google.common.collect.Sets;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.collect.Iterables.any;
 
@@ -106,5 +106,45 @@ public class PluginClassLoader extends URLClassLoader {
             // 使用默认类加载方式
             return super.loadClass(className, resolve);
         }
+    }
+
+    /**
+     * 查找资源子优先
+     *
+     * @param name 资源名称
+     * @return 资源URL
+     */
+    @Override
+    public URL getResource(String name) {
+        URL url = findResource(name);
+        if (url == null) {
+            ClassLoader parent = getParent();
+            if (parent != null) {
+                url = parent.getResource(name);
+            }
+        }
+        return url;
+    }
+
+    /**
+     * 查找资源子优先
+     *
+     * @param name 资源名称
+     * @return 资源枚举
+     * @throws IOException 如果发生IO异常
+     */
+    @Override
+    public Enumeration<URL> getResources(String name) throws IOException {
+        List<URL> resources = new ArrayList<>();
+        Enumeration<URL> child = findResources(name);
+        while (child.hasMoreElements()) {
+            resources.add(child.nextElement());
+        }
+        ClassLoader parent = getParent();
+        Enumeration<URL> parentResources = parent != null ? parent.getResources(name) : ClassLoader.getSystemResources(name);
+        while (parentResources.hasMoreElements()) {
+            resources.add(parentResources.nextElement());
+        }
+        return Collections.enumeration(resources);
     }
 }
