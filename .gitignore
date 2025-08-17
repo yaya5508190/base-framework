@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 *.class
+node_modules
+dist/
 
 ### STS ###
 .apt_generated
