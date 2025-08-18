@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { loadRemote, registerRemotes } from '@module-federation/runtime';
 import './App.css';
 
 interface MenuItem {
   key: string;
   label: string;
   component: React.ComponentType;
+}
+
+interface PluginModule {
+  register(args: { registerMenu: (menu: MenuItem) => void }): void;
 }
 
 const App = () => {
@@ -17,11 +22,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    import('plugin_project/plugin')
+    registerRemotes([
+      {
+        name: 'plugin_project',
+        entry: 'http://localhost:3001/mf-manifest.json',
+        type: 'mf-manifest',
+      },
+    ]);
+
+    loadRemote('plugin_project/plugin')
       .then((mod) => {
-        if (mod.register) {
-          mod.register({ registerMenu });
-        }
+        (mod as PluginModule | null)?.register({ registerMenu });
       })
       .catch((err) => {
         console.error('Failed to load plugin', err);
