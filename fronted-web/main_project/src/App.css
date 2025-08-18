@@ -13,3 +13,16 @@ body {
   flex-direction: column;
   justify-content: center;
 }
+
+.menu {
+  margin-bottom: 20px;
+}
+
+.menu button {
+  margin: 0 8px;
+  padding: 6px 12px;
+}
+
+.plugin-container {
+  margin-top: 20px;
+}
