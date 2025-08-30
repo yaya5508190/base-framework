@@ -1,4 +1,5 @@
 // Plugins
+import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Vue from '@vitejs/plugin-vue'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
@@ -18,6 +19,19 @@ export default defineConfig({
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     Vuetify(),
     Components(),
+    AutoImport({
+      imports: [
+        'vue',
+        {
+          '@/plugins/axios.ts': ['axiosInstance'],
+        },
+      ],
+      dts: 'src/auto-imports.d.ts',
+      eslintrc: {
+        enabled: true,
+      },
+      vueTemplate: true,
+    }),
     Fonts({
       fontsource: {
         families: [
@@ -62,6 +76,13 @@ export default defineConfig({
   server: {
     port: 3001,
     origin: 'http://localhost:3001',
+    proxy: {
+      // 以 /api 开头的请求转发到后端
+      '/943a6b1b-222a-4a99-b900-3744271480e6/api': {
+        target: 'http://127.0.0.1:8080/', // 你的后端
+        changeOrigin: true,               // 修改 Origin 为 target
+      },
+    },
   },
   css: {
     preprocessorOptions: {
@@ -74,6 +95,7 @@ export default defineConfig({
     },
   },
   base: '/943a6b1b-222a-4a99-b900-3744271480e6/',
+  // base: '/',
   build: {
     target: 'esnext' ,
     outDir: 'dist',
