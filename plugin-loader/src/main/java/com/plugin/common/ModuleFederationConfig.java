@@ -14,7 +14,9 @@ public class ModuleFederationConfig {
             Remote remote = new Remote();
             remote.setAlias(plugin.getPluginConfig().pluginId());
             remote.setName(plugin.getPluginConfig().pluginId());
-            remote.setEntry("." + contextPath + "/" + plugin.getPluginConfig().pluginId() + "/mf-manifest.json");
+            //如果contextPath是根路径，则不添加，否则添加contextPath
+            String context = "/".equals(contextPath) ? "" : contextPath;
+            remote.setEntry("." + context + "/" + plugin.getPluginConfig().pluginId() + "/mf-manifest.json");
             this.remotes.add(remote);
 
             Menu menu = new Menu();
@@ -24,6 +26,7 @@ public class ModuleFederationConfig {
             this.menus.add(menu);
         });
     }
+
     private List<Remote> remotes = new ArrayList<>();
     private List<Menu> menus = new ArrayList<>();
 
