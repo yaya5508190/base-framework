@@ -1,3 +1,6 @@
 logging:
   level:
     root: debug
+server:
+  servlet:
+    context-path: "/943a6b1b-222a-4a99-b900-3744271480e6"
