@@ -1,10 +1,13 @@
 package com.plugin.manager;
 
+import com.plugin.common.ModuleFederationConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -14,6 +17,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class PluginManager implements DisposableBean {
     // 已注册的所有插件
     private final ConcurrentHashMap<String, Plugin> allPlugins = new ConcurrentHashMap<>();
+
+    @Value("${plugin.context-path}")
+    private String contextPath;
 
     public Plugin register(Plugin plugin) {
         checkNotNull(plugin, "插件对象不能为空");
@@ -56,6 +62,10 @@ public class PluginManager implements DisposableBean {
 
     public Collection<Plugin> getAllPlugins() {
         return allPlugins.values();
+    }
+
+    public ModuleFederationConfig getAllModuleFederationConfigs() {
+        return new ModuleFederationConfig(getAllPlugins(),contextPath);
     }
 
     private String genPluginKey(String pluginName, String pluginVersion) {
