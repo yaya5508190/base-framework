@@ -9,7 +9,7 @@
 
       <div class="mb-8 text-center">
         <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
-        <h1 class="text-h2 font-weight-bold">X-MARS</h1>
+        <h1 class="text-h2 font-weight-bold">X-MARS-1</h1>
       </div>
 
       <v-row>

@@ -73,7 +73,7 @@ export default defineConfig({
       },
     },
   },
-  base: '/943a6b1b-222a-4e99-b900-3744270480e6/',
+  base: '/943a6b1b-222a-4a99-b900-3744271480e6/',
   build: {
     target: 'esnext' ,
     outDir: 'dist',

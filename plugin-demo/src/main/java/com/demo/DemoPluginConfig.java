@@ -7,7 +7,7 @@ import com.google.auto.service.AutoService;
 public class DemoPluginConfig implements PluginConfig {
     @Override
     public String name() {
-        return "测试插件";
+        return "测试插件1";
     }
 
     @Override
@@ -22,6 +22,6 @@ public class DemoPluginConfig implements PluginConfig {
 
     @Override
     public String pluginId() {
-        return "943a6b1b-222a-4e99-b900-3744270480e6";
+        return "943a6b1b-222a-4a99-b900-3744271480e6";
     }
 }
