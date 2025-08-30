@@ -57,7 +57,9 @@
     </v-app-bar>
 
     <v-main>
-      <router-view />
+      <RouterView v-slot="{ Component, route }">
+        <component :is="Component" :key="route.fullPath" />
+      </RouterView>
     </v-main>
   </v-layout>
 </template>
