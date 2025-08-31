@@ -6,6 +6,7 @@ target/
 *.class
 node_modules
 dist/
+static/
 
 ### STS ###
 .apt_generated
