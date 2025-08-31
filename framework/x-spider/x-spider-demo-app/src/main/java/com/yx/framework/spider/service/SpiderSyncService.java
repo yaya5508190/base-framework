@@ -53,10 +53,6 @@ public class SpiderSyncService {
         resp.put("requestUrl", url);
         resp.put("status", page.status());
         resp.put("contentType", context);
-        // 可选：返回部分原文（调试用）
-        resp.put("snippet", new String(page.body(), StandardCharsets.UTF_8)
-                .replaceAll("\\s+", " ")
-                .substring(0, Math.min(200, page.body().length)));
         resp.put("parsed", parsed);
         return resp;
     }
