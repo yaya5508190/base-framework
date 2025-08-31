@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @EnablePluginLoader
-public class SpringPluginDemoApplication {
+public class SpringPluginWebDemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringPluginDemoApplication.class, args);
+        SpringApplication.run(SpringPluginWebDemoApplication.class, args);
     }
 
 }

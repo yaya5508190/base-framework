@@ -3,32 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.5</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>com.yx</groupId>
+		<artifactId>plugin-project</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>plugin-project</groupId>
 	<artifactId>plugin-loader</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>plugin-loader</name>
 	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
-	<properties>
-		<java.version>17</java.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -53,7 +35,7 @@
 			<version>33.4.8-jre</version>
 		</dependency>
 		<dependency>
-			<groupId>plugin-project</groupId>
+			<groupId>com.yx</groupId>
 			<artifactId>plugin-loader-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
@@ -62,20 +44,9 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>
