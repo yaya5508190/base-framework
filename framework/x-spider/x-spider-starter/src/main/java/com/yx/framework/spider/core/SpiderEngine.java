@@ -3,7 +3,6 @@ package com.yx.framework.spider.core;
 import com.yx.framework.spider.config.SpiderProperties;
 import com.yx.framework.spider.fetch.Fetcher;
 import com.yx.framework.spider.model.Page;
-import com.yx.framework.spider.model.Result;
 import com.yx.framework.spider.model.SpiderRequest;
 import com.yx.framework.spider.schedule.Scheduler;
 import com.yx.framework.spider.spi.PageParser;
@@ -87,8 +86,8 @@ public class SpiderEngine {
         for (PageParser<?> parser : parsers) {
             if ( parser.supports(req.url(), contentType)) {
                 @SuppressWarnings("unchecked")
-                List<Result<Object>> results = (List<Result<Object>>) (List<?>)  parser.parse(page);
-                for (Result<Object> r : results) {
+                List<Object> results = (List<Object>)parser.parse(page);
+                for (Object r : results) {
                     for (Pipeline<?> pipe : pipelines) {
                         @SuppressWarnings("unchecked")
                         Pipeline<Object> cast = (Pipeline<Object>) pipe;
