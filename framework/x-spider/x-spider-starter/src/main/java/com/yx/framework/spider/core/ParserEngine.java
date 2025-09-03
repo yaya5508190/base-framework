@@ -31,12 +31,6 @@ public class ParserEngine {
                             : results
             );
         }
-
-        Map<String, Object> resp = new LinkedHashMap<>();
-        resp.put("requestUrl", url);
-        resp.put("status", page.status());
-        resp.put("contentType", context);
-        resp.put("parsed", parsed);
-        return resp;
+        return parsed;
     }
 }
