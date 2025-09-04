@@ -5,7 +5,8 @@ import com.yx.framework.spider.fetch.Fetcher;
 import com.yx.framework.spider.model.Page;
 import com.yx.framework.spider.model.SpiderRequest;
 import com.yx.framework.spider.schedule.Scheduler;
-import com.yx.framework.spider.spi.PageParser;
+import com.yx.framework.spider.spi.BodyParser;
+import com.yx.framework.spider.spi.HtmlBodyParser;
 import com.yx.framework.spider.spi.Pipeline;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
@@ -24,14 +25,14 @@ import java.util.concurrent.TimeUnit;
 public class SpiderEngine {
     private final Scheduler scheduler;
     private final Fetcher fetcher;
-    private final List<PageParser<?>> parsers;
+    private final List<HtmlBodyParser<?>> parsers;
     private final List<Pipeline<?>> pipelines;
     private final ExecutorService pool;
     private final SpiderProperties props;
     private final ConcurrentMap<String, RateLimiter> hostLimiters = new ConcurrentHashMap<>();
 
 
-    public SpiderEngine(Scheduler scheduler, Fetcher fetcher, List<PageParser<?>> parsers,
+    public SpiderEngine(Scheduler scheduler, Fetcher fetcher, List<HtmlBodyParser<?>> parsers,
                         List<Pipeline<?>> pipelines, ExecutorService pool, SpiderProperties props) {
         this.scheduler = scheduler;
         this.fetcher = fetcher;
@@ -83,7 +84,7 @@ public class SpiderEngine {
     void processOne(SpiderRequest req) throws Exception {
         Page page = fetcher.fetch(req);
         String contentType = page.contentType() == null ? "" : page.contentType().toLowerCase();
-        for (PageParser<?> parser : parsers) {
+        for (BodyParser<?,Page> parser : parsers) {
             if ( parser.supports(req.url(), contentType)) {
                 @SuppressWarnings("unchecked")
                 List<Object> results = (List<Object>)parser.parse(page);

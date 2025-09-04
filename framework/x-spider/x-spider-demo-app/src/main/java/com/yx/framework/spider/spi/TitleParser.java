@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 @Component
-public class TitleParser implements PageParser<String> {
+public class TitleParser implements HtmlBodyParser<String> {
     @Override
     public boolean supports(String url, String ct) { return ct != null && ct.contains("text/html"); }
 

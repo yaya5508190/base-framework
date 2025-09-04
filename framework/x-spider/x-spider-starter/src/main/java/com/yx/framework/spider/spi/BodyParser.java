@@ -1,11 +1,10 @@
 package com.yx.framework.spider.spi;
 
 import com.yx.framework.spider.enums.DataType;
-import com.yx.framework.spider.model.Page;
 
 import java.util.List;
 
-public interface PageParser<T> {
+public interface BodyParser<T,P> {
     boolean supports(String url, String contentType);
 
     //返回结果的配置
@@ -13,7 +12,7 @@ public interface PageParser<T> {
         return new ResultProperty("data", DataType.COLLECTION);
     }
 
-    List<T> parse(Page page) throws Exception;
+    List<T> parse(P page) throws Exception;
 
     /**
      * 定义返回的属性名称

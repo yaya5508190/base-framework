@@ -3,10 +3,12 @@ package com.yx.framework.spider.config;
 import com.yx.framework.spider.core.SpiderEngine;
 import com.yx.framework.spider.fetch.Fetcher;
 import com.yx.framework.spider.fetch.OkHttpFetcher;
+import com.yx.framework.spider.model.Page;
 import com.yx.framework.spider.robot.RobotsService;
 import com.yx.framework.spider.schedule.InMemoryScheduler;
 import com.yx.framework.spider.schedule.Scheduler;
-import com.yx.framework.spider.spi.PageParser;
+import com.yx.framework.spider.spi.BodyParser;
+import com.yx.framework.spider.spi.HtmlBodyParser;
 import com.yx.framework.spider.spi.Pipeline;
 import com.yx.framework.spider.support.ProxyProvider;
 import com.yx.framework.spider.support.UserAgentProvider;
@@ -72,7 +74,7 @@ public class SpiderAutoConfiguration {
 
     @Bean
     public SpiderEngine spiderEngine(
-            Scheduler scheduler, Fetcher fetcher, List<PageParser<?>> parsers,
+            Scheduler scheduler, Fetcher fetcher, List<HtmlBodyParser<?>> parsers,
             List<Pipeline<?>> pipelines, ExecutorService pool, SpiderProperties props) {
         return new SpiderEngine(scheduler, fetcher, parsers, pipelines, pool, props);
     }
