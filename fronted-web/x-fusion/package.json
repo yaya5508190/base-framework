@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" -- && rimraf \"../../web-plugin-demo/src/main/resources/static/*\" --glob && cpy \"dist/**\" \"../../web-plugin-demo/src/main/resources/static\"",
+    "build": "run-p type-check \"build-only {@}\" -- && rimraf \"../../plugin-web-app-demo/src/main/resources/static/*\" --glob && cpy \"dist/**\" \"../../plugin-web-app-demo/src/main/resources/static\"",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
