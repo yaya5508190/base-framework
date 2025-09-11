@@ -44,7 +44,7 @@
     <modules>
         <module>framework</module>
         <module>plugin-demo</module>
-        <module>web-plugin-demo</module>
-        <module>x-spider-demo-app</module>
+        <module>plugin-web-app-demo</module>
+        <module>x-spider-app-demo</module>
     </modules>
 </project>
