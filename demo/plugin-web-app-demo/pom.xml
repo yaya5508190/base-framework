@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yx</groupId>
-        <artifactId>base-framework</artifactId>
+        <artifactId>demo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>x-spider-app-demo</artifactId>
-    <name>x-spider-app-demo</name>
-    <description>Reusable Spring crawler starter</description>
+    <artifactId>plugin-web-app-demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>plugin-web-app-demo</name>
+    <description>Demo project for Spring Boot</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -18,13 +18,8 @@
         </dependency>
         <dependency>
             <groupId>com.yx</groupId>
-            <artifactId>x-spider-starter</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <scope>runtime</scope>
+            <artifactId>plugin-loader</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

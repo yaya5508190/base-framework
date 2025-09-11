@@ -43,8 +43,6 @@
 
     <modules>
         <module>framework</module>
-        <module>plugin-demo</module>
-        <module>plugin-web-app-demo</module>
-        <module>x-spider-app-demo</module>
+        <module>demo</module>
     </modules>
 </project>
