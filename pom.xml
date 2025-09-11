@@ -3,16 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.yx</groupId>
-    <artifactId>plugin-project</artifactId>
+    <artifactId>base-framework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <description>spring plugin loader</description>
+    <description>base-framework</description>
     <packaging>pom</packaging>
+
     <properties>
         <java.version>17</java.version>
         <spring-boot.version>3.5.5</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -24,6 +26,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -37,30 +40,11 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <!-- 默认构建,包含所有模块 -->
-        <profile>
-            <id>default-build</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>plugin-demo</module>
-                <module>web-plugin-demo</module>
-                <module>x-spider-demo-app</module>
-                <module>framework/plugin-loader-api</module>
-                <module>framework/plugin-loader</module>
-                <module>framework/x-spider-starter</module>
-            </modules>
-        </profile>
-        <!-- 只构建框架模块 -->
-        <profile>
-            <id>framework-only</id>
-            <modules>
-                <module>framework/plugin-loader-api</module>
-                <module>framework/plugin-loader</module>
-                <module>framework/x-spider-starter</module>
-            </modules>
-        </profile>
-    </profiles>
+
+    <modules>
+        <module>framework</module>
+        <module>plugin-demo</module>
+        <module>web-plugin-demo</module>
+        <module>x-spider-demo-app</module>
+    </modules>
 </project>

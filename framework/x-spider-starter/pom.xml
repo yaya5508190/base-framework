@@ -5,9 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yx</groupId>
-        <artifactId>plugin-project</artifactId>
+        <artifactId>framework</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>x-spider-starter</artifactId>
     <name>x-spider-starter</name>

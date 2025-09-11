@@ -4,12 +4,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yx</groupId>
-        <artifactId>plugin-project</artifactId>
+        <artifactId>base-framework</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>plugin-loader-api</artifactId>
+    <artifactId>framework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>plugin-loader-api</name>
-    <description>Demo project for Spring Boot</description>
+    <name>framework</name>
+    <description>framework</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>spring-plugin-loader</module>
+        <module>x-spider-starter</module>
+    </modules>
 </project>

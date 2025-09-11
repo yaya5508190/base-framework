@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.yx</groupId>
+        <artifactId>framework</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>spring-plugin-loader</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>spring-plugin-loader</name>
+    <description>spring-plugin-loader</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>plugin-loader</module>
+        <module>plugin-loader-api</module>
+    </modules>
+</project>

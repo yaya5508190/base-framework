@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yx</groupId>
-        <artifactId>plugin-project</artifactId>
+        <artifactId>base-framework</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>x-spider-demo-app</artifactId>
