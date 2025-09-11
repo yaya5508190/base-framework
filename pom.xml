@@ -24,32 +24,43 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <release>${java.version}</release>
-                        <compilerArgs>
-                            <arg>-parameters</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
-
-    <modules>
-        <module>plugin-loader</module>
-        <module>plugin-loader-api</module>
-        <module>plugin-demo</module>
-        <module>web-plugin-demo</module>
-        <module>framework</module>
-    </modules>
+    <profiles>
+        <!-- 默认构建,包含所有模块 -->
+        <profile>
+            <id>default-build</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>plugin-demo</module>
+                <module>web-plugin-demo</module>
+                <module>x-spider-demo-app</module>
+                <module>framework/plugin-loader-api</module>
+                <module>framework/plugin-loader</module>
+                <module>framework/x-spider-starter</module>
+            </modules>
+        </profile>
+        <!-- 只构建框架模块 -->
+        <profile>
+            <id>framework-only</id>
+            <modules>
+                <module>framework/plugin-loader-api</module>
+                <module>framework/plugin-loader</module>
+                <module>framework/x-spider-starter</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
