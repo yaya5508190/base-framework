@@ -19,14 +19,25 @@ public class ModuleFederationConfig {
             remote.setEntry("." + context + "/" + plugin.getPluginConfig().pluginId() + "/mf-manifest.json");
             this.remotes.add(remote);
 
+            List<Menu> subMenus = new ArrayList<>();
             // 添加菜单配置，支持一个插件多个菜单
             plugin.getPluginConfig().menus().forEach((menuName, componentName) -> {
                 Menu menu = new Menu();
                 menu.setName(menuName);
                 menu.setPath("/" + plugin.getPluginConfig().pluginId() + "/" + componentName);
                 menu.setComponent(plugin.getPluginConfig().pluginId() + "/" + componentName);
-                this.menus.add(menu);
+                subMenus.add(menu);
             });
+
+            if(plugin.getPluginConfig().parentMenuName()!=null && !plugin.getPluginConfig().parentMenuName().isBlank()){
+                Menu parentMenu = new Menu();
+                parentMenu.setName(plugin.getPluginConfig().parentMenuName());
+                parentMenu.setParent(true);
+                parentMenu.setChildren(subMenus);
+                this.menus.add(parentMenu);
+            }else {
+                this.menus.addAll(subMenus);
+            }
         });
     }
 
@@ -45,5 +56,7 @@ public class ModuleFederationConfig {
         private String name;
         private String path;
         private String component;
+        private Boolean parent = false;
+        private List<Menu> children = new ArrayList<>();
     }
 }

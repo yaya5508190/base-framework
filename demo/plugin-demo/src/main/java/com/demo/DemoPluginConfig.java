@@ -29,7 +29,7 @@ public class DemoPluginConfig implements PluginConfig {
 
     @Override
     public String parentMenuName() {
-        return "";
+        return "测试插件";
     }
 
     @Override
