@@ -14,7 +14,7 @@ export function mount (el: Element, props?: Record<string, any>, vuetify?: any) 
   if (!vuetify) {
     vuetify = createVuetify({ components, directives })
   }
-  app = createApp(Root, props)
+  app = createApp(Root, {msg: 'App1'})
   app.use(vuetify)
   app.mount(el)
 }

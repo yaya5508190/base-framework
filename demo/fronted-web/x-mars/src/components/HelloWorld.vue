@@ -8,7 +8,7 @@
       />
 
       <div class="mb-8 text-center">
-        <div class="text-body-2 font-weight-light mb-n1">Welcome to {{title}}</div>
+        <div class="text-body-2 font-weight-light mb-n1">Welcome to {{title}} {{msg}}</div>
         <h1 class="text-h2 font-weight-bold">X-MARS</h1>
       </div>
 
@@ -91,5 +91,9 @@
   const title = ref<string>('')
   axiosInstance.get("/api/plugin").then((response) => {
     title.value = response.data;
+  });
+
+  defineProps({
+    msg: String
   });
 </script>

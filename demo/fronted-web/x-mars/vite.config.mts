@@ -46,7 +46,8 @@ export default defineConfig({
     federation({
       name: 'x-mars',
       exposes: {
-        './App': './src/exposes/mount.ts',
+        './App': './src/exposes/App/mount.ts',
+        './App1': './src/exposes/App1/mount.ts',
       },
       filename: 'remoteEntry.js',
       manifest: true,

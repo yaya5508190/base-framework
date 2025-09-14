@@ -19,11 +19,14 @@ public class ModuleFederationConfig {
             remote.setEntry("." + context + "/" + plugin.getPluginConfig().pluginId() + "/mf-manifest.json");
             this.remotes.add(remote);
 
-            Menu menu = new Menu();
-            menu.setName(plugin.getPluginConfig().name());
-            menu.setPath("/" + plugin.getPluginConfig().pluginId());
-            menu.setComponent(plugin.getPluginConfig().pluginId() + "/App");
-            this.menus.add(menu);
+            // 添加菜单配置，支持一个插件多个菜单
+            plugin.getPluginConfig().menus().forEach((menuName, componentName) -> {
+                Menu menu = new Menu();
+                menu.setName(menuName);
+                menu.setPath("/" + plugin.getPluginConfig().pluginId() + "/" + componentName);
+                menu.setComponent(plugin.getPluginConfig().pluginId() + "/" + componentName);
+                this.menus.add(menu);
+            });
         });
     }
 

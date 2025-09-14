@@ -2,7 +2,7 @@ spring:
   application:
     name: plugin-loader
 plugin:
-  path: C:\develop\x-project\spring-plugin-loader\plugin-demo\target
+  path: C:\develop\x-project\base-framework\demo\plugin-demo\target
   scan: true
   context-path: /loader
 logging:
