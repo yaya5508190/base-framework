@@ -3,9 +3,7 @@ package com.plugin.common;
 import com.plugin.manager.Plugin;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class ModuleFederationConfig {
@@ -19,25 +17,37 @@ public class ModuleFederationConfig {
             remote.setEntry("." + context + "/" + plugin.getPluginConfig().pluginId() + "/mf-manifest.json");
             this.remotes.add(remote);
 
+            Map<String, Menu> parentMenuMap = new HashMap<>();
             List<Menu> subMenus = new ArrayList<>();
             // 添加菜单配置，支持一个插件多个菜单
             plugin.getPluginConfig().menus().forEach((menuName, componentName) -> {
-                Menu menu = new Menu();
-                menu.setName(menuName);
-                menu.setPath("/" + plugin.getPluginConfig().pluginId() + "/" + componentName);
-                menu.setComponent(plugin.getPluginConfig().pluginId() + "/" + componentName);
-                subMenus.add(menu);
-            });
+                // 判断是否有上级菜单
+                boolean isSubMenu = menuName.contains("/");
 
-            if(plugin.getPluginConfig().parentMenuName()!=null && !plugin.getPluginConfig().parentMenuName().isBlank()){
-                Menu parentMenu = new Menu();
-                parentMenu.setName(plugin.getPluginConfig().parentMenuName());
-                parentMenu.setParent(true);
-                parentMenu.setChildren(subMenus);
-                this.menus.add(parentMenu);
-            }else {
-                this.menus.addAll(subMenus);
-            }
+                if (isSubMenu) {
+                    String parentMenuName = menuName.split("/")[0];
+                    String childMenuName = menuName.split("/")[1];
+                    Menu parentMenu = parentMenuMap.get(parentMenuName);
+                    if (parentMenu == null) {
+                        parentMenu = new Menu();
+                        parentMenu.setName(parentMenuName);
+                        parentMenu.setParent(true);
+                        parentMenuMap.put(parentMenuName, parentMenu);
+                        this.menus.add(parentMenu);
+                    }
+                    Menu childMenu = new Menu();
+                    childMenu.setName(childMenuName);
+                    childMenu.setPath("/" + plugin.getPluginConfig().pluginId() + "/" + componentName);
+                    childMenu.setComponent(plugin.getPluginConfig().pluginId() + "/" + componentName);
+                    parentMenu.getChildren().add(childMenu);
+                } else {
+                    Menu menu = new Menu();
+                    menu.setName(menuName);
+                    menu.setPath("/" + plugin.getPluginConfig().pluginId() + "/" + componentName);
+                    menu.setComponent(plugin.getPluginConfig().pluginId() + "/" + componentName);
+                    this.menus.add(menu);
+                }
+            });
         });
     }
 

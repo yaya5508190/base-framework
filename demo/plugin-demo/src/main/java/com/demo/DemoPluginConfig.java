@@ -28,12 +28,7 @@ public class DemoPluginConfig implements PluginConfig {
     }
 
     @Override
-    public String parentMenuName() {
-        return "测试插件";
-    }
-
-    @Override
     public Map<String, String> menus() {
-        return Map.of("测试插件-菜单","App","测试插件-菜单1","App1");
+        return Map.of("测试插件/测试插件-菜单","App","测试插件/测试插件-菜单1","App1");
     }
 }
