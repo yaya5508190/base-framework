@@ -16,8 +16,8 @@ public interface PluginConfig {
     String pluginId();
 
     /**
-     * 当前插件含的菜单，一个插件可以注册多个菜单
-     * @return Map<上级菜单名称/菜单名称, 组件名称>
+     * 当前插件包含的组件
+     * @return 组件列表
      */
-    Map<String,String> menus();
+    List<PluginComponent> pluginComponents();
 }

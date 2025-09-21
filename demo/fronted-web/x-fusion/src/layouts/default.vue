@@ -10,31 +10,24 @@
         />
       </v-list>
 
-      <v-divider/>
+      <v-divider />
 
       <v-list density="compact" nav>
         <v-list-item
-          title="首页"
-          value="首页"
+          title="组件"
+          value="组件"
           @click="$router.push('/')"
         />
-<!--        <v-list-item-->
-<!--          v-for="menu in mfConfig.menus"-->
-<!--          :key="menu.name"-->
-<!--          :title="menu.name"-->
-<!--          :value="menu.name"-->
-<!--          @click="$router.push(menu.path)"-->
-<!--        />-->
         <template v-for="menu in mfConfig.menus">
-          <template v-if="menu.children && menu.children.length">
+          <template v-if="menu.children && menu.children.length > 0">
             <v-list-group
               :key="menu.name + '-group'"
             >
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 <v-list-item
                   v-bind="props"
                   :title="menu.name"
-                ></v-list-item>
+                />
               </template>
               <v-list-item
                 v-for="child in menu.children"
@@ -59,7 +52,7 @@
 
     <v-app-bar :elevation="0">
       <template #prepend>
-        <v-app-bar-nav-icon @click.stop="open = !open" v-if="mobile"/>
+        <v-app-bar-nav-icon v-if="mobile" @click.stop="open = !open" />
       </template>
 
       <!--      <v-app-bar-title>Application Bar</v-app-bar-title>-->
@@ -84,21 +77,21 @@
 
     <v-main>
       <RouterView v-slot="{ Component, route }">
-        <component :is="Component" :key="route.fullPath"/>
+        <component :is="Component" :key="route.fullPath" />
       </RouterView>
     </v-main>
   </v-layout>
 </template>
 
 <script lang="ts" setup>
-import {useTheme} from 'vuetify'
-import {useModuleFederation} from '@/stores/module-federation.ts'
-import {useDisplay} from 'vuetify'
-import '@/styles/global.scss'
+  import { useDisplay, useTheme } from 'vuetify'
+  import { useModuleFederation } from '@/stores/module-federation.ts'
 
-const open = ref(true)
-const theme = useTheme()
-const {mobile} = useDisplay()
+  import '@/styles/global.scss'
 
-const mfConfig = useModuleFederation().mfConfig
+  const open = ref(true)
+  const theme = useTheme()
+  const { mobile } = useDisplay()
+
+  const mfConfig = useModuleFederation().mfConfig
 </script>

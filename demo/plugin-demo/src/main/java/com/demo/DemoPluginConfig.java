@@ -1,9 +1,10 @@
 package com.demo;
 
+import api.PluginComponent;
 import api.PluginConfig;
 import com.google.auto.service.AutoService;
 
-import java.util.Map;
+import java.util.List;
 
 @AutoService(PluginConfig.class)
 public class DemoPluginConfig implements PluginConfig {
@@ -28,7 +29,11 @@ public class DemoPluginConfig implements PluginConfig {
     }
 
     @Override
-    public Map<String, String> menus() {
-        return Map.of("测试插件/测试插件-菜单","App","测试插件/测试插件-菜单1","App1");
+    public List<PluginComponent> pluginComponents() {
+        return List.of(
+                new PluginComponent(pluginId(),"menu", "测试插件/测试插件-菜单", "App", "测试插件"),
+                new PluginComponent(pluginId(),"menu", "测试插件/测试插件-菜单1", "App1", "测试插件"),
+                new PluginComponent(pluginId(),"component", "测试组件", "App1", "测试组件")
+        );
     }
 }
