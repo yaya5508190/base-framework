@@ -1,8 +1,11 @@
 package com.yx.framework.spider.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.FormBody;
+import okio.Buffer;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public record SpiderRequest(
@@ -31,6 +34,17 @@ public record SpiderRequest(
         ObjectMapper mapper = new ObjectMapper();
         byte[] body = mapper.writeValueAsString(jsonBody).getBytes(StandardCharsets.UTF_8);
 
+        return new SpiderRequest(url, headers, "POST", body);
+    }
+
+    public static SpiderRequest post(String url, Map<String, String> headers, Map<String,String> fromBody) throws Exception {
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        fromBody.forEach(formBuilder::add);
+        okhttp3.RequestBody formBody = formBuilder.build();
+        // 获取字节数组
+        Buffer buffer = new Buffer();
+        formBody.writeTo(buffer);
+        byte[] body = buffer.readByteArray();
         return new SpiderRequest(url, headers, "POST", body);
     }
 }

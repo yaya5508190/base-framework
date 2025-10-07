@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.Proxy;
 
 public class OkHttpFetcher implements Fetcher {
-    private static final MediaType OCTET = MediaType.parse("application/octet-stream");
     private final OkHttpClient http;
     private final UserAgentProvider ua;
     private final ProxyProvider proxy;
@@ -45,7 +44,12 @@ public class OkHttpFetcher implements Fetcher {
 
         // 修正：统一在 builder 上 build；POST 时显式 Content-Type
         if ("POST".equalsIgnoreCase(req.method()) && req.body() != null) {
-            requestBuilder = requestBuilder.post(RequestBody.create(req.body(), OCTET));
+            // 从 header 中读取 Content-Type，如果没有则使用默认值
+            String contentType = req.headers().getOrDefault("Content-Type", "application/octet-stream");
+            MediaType mediaType = MediaType.parse(contentType);
+            requestBuilder = requestBuilder.post(RequestBody.create(req.body(), mediaType));
+            // 移除 header 中的 Content-Type，避免重复（OkHttp 会自动从 RequestBody 添加）
+            requestBuilder.removeHeader("Content-Type");
         } else {
             requestBuilder = requestBuilder.get();
         }
